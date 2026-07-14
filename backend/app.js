@@ -1,40 +1,42 @@
 const express = require("express");
+const cors = require("cors");
+
+require("dotenv").config();
+
+const employeeRoutes = require("./routes/employees");
 
 const app = express();
-const PORT = 3000;
 
-// Temporary in-memory data
-const employees = [
-    {
-        id: 1,
-        name: "Temi Kej",
-        department: "Engineering"
-    },
-    {
-        id: 2,
-        name: "Yomi Johnson",
-        department: "HR"
-    }
-];
+const PORT = process.env.PORT || 3000;
 
-// Home route
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Home Route
 app.get("/", (req, res) => {
     res.send("Employee Directory API");
 });
 
-// Health check
+// Health Check
 app.get("/health", (req, res) => {
-    res.json({
-        status: "OK"
+    res.status(200).json({
+        status: "OK",
+        message: "Employee API is running"
     });
 });
 
-// Get all employees
-app.get("/employees", (req, res) => {
-    res.json(employees);
+// Employee Routes
+app.use("/employees", employeeRoutes);
+
+// 404 Handler
+app.use((req, res) => {
+    res.status(404).json({
+        message: "Route not found"
+    });
 });
 
-// Start server
+// Start Server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
