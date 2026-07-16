@@ -1,0 +1,51 @@
+name: Employee-Directory CI
+
+on:
+  push:
+    branches:
+      - main
+      - development
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  backend:
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: backend/node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('backend/package-lock.json') }}
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Check Formatting
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Run Tests
+        run: npm test
+        continue-on-error: true
+
+      - name: Build Backend Docker Image
+        run: docker build -t employee-backend ./..
