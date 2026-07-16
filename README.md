@@ -1,4 +1,4 @@
-# Employee Directory
+# Employee Directory - Docker Compose
 
 A simple Employee Directory application built as part of my DevOps learning journey.
 
