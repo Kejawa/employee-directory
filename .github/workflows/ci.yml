@@ -48,4 +48,4 @@ jobs:
         continue-on-error: true
 
       - name: Build Backend Docker Image
-        run: docker build -t employee-backend ./backend
+        run: docker build -t employee-backend .
