@@ -5,47 +5,82 @@ on:
     branches:
       - main
       - development
-
   pull_request:
     branches:
       - main
 
 jobs:
 
+##########################################
+
   backend:
-
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: backend
-
     steps:
+      - uses: actions/checkout@v4
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
 
-      - name: Cache Dependencies
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: backend/node_modules
-          key: node-${{ runner.os }}-${{ hashFiles('backend/package-lock.json') }}
+          key: backend-${{ hashFiles('backend/package-lock.json') }}
 
-      - name: Install Dependencies
-        run: npm install
+      - run: npm install
 
-      - name: Check Formatting
-        run: npm run lint
+      - run: npm run lint
         continue-on-error: true
 
-      - name: Run Tests
-        run: npm test
+      - run: npm test
         continue-on-error: true
 
-      - name: Build Backend Docker Image
-        run: docker build -t employee-backend .
+##########################################
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Frontend Files
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f app.js
+
+##########################################
+
+  docker:
+    needs:
+      - backend
+      - frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Backend Image
+        run: docker build -t employee-backend ./backend
+
+      - name: Build Frontend Image
+        run: docker build -t employee-frontend ./frontend
+
+      - name: Save Backend Image Name
+        run: |
+          echo employee-backend > backend-image.txt
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: backend-image.txt
+
+      - name: download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build
