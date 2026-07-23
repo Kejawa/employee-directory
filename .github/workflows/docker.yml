@@ -37,9 +37,3 @@ jobs:
           tags: |
             kejawa/employee-frontend:latest
             kejawa/employee-frontend:${{ github.sha }}
-
-      - name: Trigger Jenkins
-        if: success()
-        run: |
-          curl -X POST \
-            "http://192.168.10.100:8080/generic-webhook-trigger/invoke?token=my-secret-employee-token"      
