@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Backend Image
+      - name: Build & Push Backend Image
         uses: docker/build-push-action@v6
         with:
           context: ./backend
@@ -29,7 +29,7 @@ jobs:
             kejawa/employee-backend:latest
             kejawa/employee-backend:${{ github.sha }}
 
-      - name: Build Frontend Image
+      - name: Build & Push Frontend Image
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
