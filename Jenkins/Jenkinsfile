@@ -38,7 +38,12 @@ pipeline {
 
         stage('Pull Latest Images') {
             steps {
-                sh "docker compose -f ${COMPOSE_FILE} pull"
+                sh '''
+                docker compose \
+                --env-file .env \
+                -f docker-compose.prod.yml \
+                pull
+                '''
             }
         }
 
@@ -50,7 +55,12 @@ pipeline {
 
         stage('Deploy New Containers') {
             steps {
-                sh "docker compose -f ${COMPOSE_FILE} up -d"
+                sh '''
+                docker compose \
+                --env-file .env \
+                -f docker-compose.prod.yml \
+                up -d
+                '''
             }
         }
 
