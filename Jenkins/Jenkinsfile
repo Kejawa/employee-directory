@@ -38,12 +38,7 @@ pipeline {
 
         stage('Pull Latest Images') {
             steps {
-                sh '''
-                docker compose \
-                --env-file .env \
-                -f docker-compose.prod.yml \
-                pull
-                '''
+                sh "docker compose -f ${COMPOSE_FILE} pull"
             }
         }
 
