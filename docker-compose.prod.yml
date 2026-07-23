@@ -41,7 +41,7 @@ services:
     image: kejawa/employee-frontend:latest
     container_name: frontend
     ports: 
-      - "8080:80"
+      - "8081:80"
     networks:
       - employee-network
 
