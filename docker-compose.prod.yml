@@ -40,7 +40,7 @@ services:
     # build: ./frontend
     image: kejawa/employee-frontend:latest
     container_name: frontend
-    ports:
+    ports: 
       - "8080:80"
     networks:
       - employee-network
