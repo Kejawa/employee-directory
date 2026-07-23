@@ -25,8 +25,8 @@ services:
     # build: ./backend
     image: kejawa/employee-backend:latest
     container_name: backend
-    env_file: 
-      - ./backend/.env
+    # env_file: 
+    #   - ./backend/.env
     depends_on:
       postgres:
         condition: service_healthy  
