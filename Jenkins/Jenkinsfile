@@ -41,7 +41,7 @@ pipeline {
                 sh """
                     set -e
 
-                    cd ~/opt
+                    cd /opt/employee-directory
 
                     echo "Pulling latest images..."
                     docker compose -f ${COMPOSE_FILE} pull
