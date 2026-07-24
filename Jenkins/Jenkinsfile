@@ -36,24 +36,22 @@ pipeline {
             }
         }
 
-        stage('Pull Latest Images') {
-            steps {
-                sh "docker compose -f ${COMPOSE_FILE} pull"
-            }
-        }
-
-        stage('Stop Existing Containers') {
-            steps {
-                sh "docker compose -f ${COMPOSE_FILE} down"
-            }
-        }
-
-        stage('Deploy New Containers') {
+        stage('Deploy') {
             steps {
                 sh """
+                    set -e
+
                     cd ~/opt
-                    docker compose -f ${COMPOSE_FILE} up -d
-                   """ 
+
+                    echo "Pulling latest images..."
+                    docker compose -f ${COMPOSE_FILE} pull
+
+                    echo "Stopping old containers..."
+                    docker compose -f ${COMPOSE_FILE} down
+
+                    echo "Starting new containers..."
+                    docker compose -f ${COMPOSE_FILE} up -d --remove-orphans
+                """
             }
         }
 
