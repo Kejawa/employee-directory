@@ -51,7 +51,7 @@ pipeline {
         stage('Deploy New Containers') {
             steps {
                 sh """
-                    cd ~/employee-directory
+                    cd ~/opt
                     docker compose -f ${COMPOSE_FILE} up -d
                    """ 
             }
